@@ -1,6 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const passport = require('passport');
 const app = express();
+
+
+//body parser
+//extended false means you can not post nested object
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
 
 const users = require('./routes/api/users');
 const profile = require('./routes/api/profile');
@@ -15,9 +24,13 @@ mongoose
    .then(() => console.log('DB Connected Successfully'))
    .catch(err => console.log(err));
 
-app.get('/', (req, res) => {
-  res.send('Hello World')
-});
+
+//Passport middleware
+
+app.use(passport.initialize());
+
+//Passport config
+require('./config/passport')(passport);
 
 
 //First argument in app.use is to specify the initial route
